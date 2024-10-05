@@ -1,0 +1,7 @@
+.git/*
+.github/*
+.direnv/*
+build/*
+result/*
+tests/munit/*
+src/p99-clang.h

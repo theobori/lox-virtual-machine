@@ -1,6 +1,11 @@
 #ifndef __P99_CLANG_H__
 #define __P99_CLANG_H__
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmissing-braces"
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+#pragma GCC diagnostic pop
+
 #include <stdlib.h>
 
 // https://gitlab.inria.fr/gustedt/p99
@@ -8694,7 +8699,7 @@
 #define P99_INIT_H_ 
 #define P99_INITIALIZE(X,L) P00_ABLESS(P00_INITIALIZE((X), (L)), *(X))
 #define P99_INIT_ONCE(NAME,VARP) P99_PASTE3(p00_, NAME, _init_once)(VARP)
-#define P99_INIT _Pragma("GCC diagnostic push") _Pragma("GCC diagnostic ignored \"-Wmissing-braces\"") _Pragma("GCC diagnostic ignored \"-Wmissing-field-initializers\"") { 0 } _Pragma("GCC diagnostic pop")
+#define P99_INIT { 0 }
 #define P99_INIT_TRIGGER(NAME,ARGC,ARGV) P99_PASTE2(p00_init_func_, NAME)((ARGC), (ARGV))
 #define P99_INIT_VARIABLE(...) P99_IF_EQ(P99_NARG(__VA_ARGS__), 3)(P00_INIT_VARIABLE(__VA_ARGS__))(P00_INIT_VARIABLE(__VA_ARGS__,))
 #define p99_inline __attribute__((__always_inline__)) inline

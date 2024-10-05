@@ -1,0 +1,13 @@
+fun noReturn(arg) {
+    if (arg <= 0) {
+        return arg;
+    }
+
+    return noReturn(arg - 1);
+}
+
+fun abc(a) {
+    return a + 100;
+}
+
+print noReturn(3);
