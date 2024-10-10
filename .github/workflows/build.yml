@@ -1,4 +1,4 @@
-name: build
+name: 'Build and check code format'
 
 on:
   pull_request:
