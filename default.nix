@@ -15,5 +15,6 @@ stdenv.mkDerivation {
     description = "This is a bytecode virtual machine for the Lox language";
     homepage = "https://github.com/theobori/lox-virtual-machine";
     license = lib.licenses.mit;
+    mainProgram = "clox";
   };
 }

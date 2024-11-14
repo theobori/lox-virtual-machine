@@ -2,6 +2,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     treefmt-nix.url = "github:numtide/treefmt-nix";
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
   outputs =
@@ -9,47 +10,35 @@
       self,
       nixpkgs,
       treefmt-nix,
+      flake-utils,
     }:
-    let
-      supportedSystems = [
-        "x86_64-linux"
-        "aarch64-linux"
-        "x86_64-darwin"
-        "aarch64-darwin"
-      ];
+    flake-utils.lib.eachDefaultSystem (
+      system:
+      let
+        pkgs = nixpkgs.legacyPackages.${system};
 
-      forEachSupportedSystem =
-        f: nixpkgs.lib.genAttrs supportedSystems (system: f { pkgs = import nixpkgs { inherit system; }; });
-
-      treefmtEval = pkgs: treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
-    in
-    {
-      formatter = forEachSupportedSystem ({ pkgs }: (treefmtEval pkgs).config.build.wrapper);
-
-      checks = forEachSupportedSystem (
-        { pkgs }:
-        {
-          formatting = (treefmtEval pkgs).config.build.check self;
-        }
-      );
-
-      packages = forEachSupportedSystem (
-        { pkgs }:
-        {
+        treefmtEval = treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
+      in
+      {
+        packages = {
           default = pkgs.callPackage ./. { };
-        }
-      );
+        };
 
-      devShells = forEachSupportedSystem (
-        { pkgs }:
-        {
+        devShells = {
           default = pkgs.mkShell {
+            venvDir = ".venv";
             packages = with pkgs; [
               cmake
               clang
             ];
           };
-        }
-      );
-    };
+        };
+
+        formatter = treefmtEval.config.build.wrapper;
+
+        checks = {
+          formatting = treefmtEval.config.build.check self;
+        };
+      }
+    );
 }
